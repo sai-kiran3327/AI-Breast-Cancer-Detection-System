@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breast Cancer Detection</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background-image: linear-gradient(315deg, #de5499 19%, #a0c5ba 85%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            width: 80%;
+            text-align: center;
+        }
+        .hidden {
+            display: none;
+        }
+        .btn-primary {
+            background-color: #de5499;
+            border-color: #de5499;
+            width: 100%;
+        }
+        .form-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .form-container .col-md-5 {
+            padding: 0 20px;
+        }
+        .form-container .col-md-7 {
+            padding: 0 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Home Page -->
+    <div class="container" id="homePage">
+        <h1>Welcome to Breast Cancer Detection</h1>
+        <p>Breast cancer is a leading cause of death among women worldwide. Early detection is crucial for treatment success.</p>
+        <img src="static/img1.jpg" alt="Breast Cancer Awareness" class="img-fluid" style="border-radius: 10px;">
+        <br><br>
+        <button class="btn btn-primary" onclick="showInputPage()">Detect Your Diagnosis</button>
+    </div>
+
+    <!-- Input Page -->
+    <div class="container hidden" id="inputPage">
+        <h1>Enter Cell Details</h1>
+        
+        <div class="form-container">
+            <!-- Left Side: Image -->
+            <div class="col-md-5">
+                <img src="static/img.jpeg" alt="Breast Cancer Awareness" class="img-fluid" 
+                     style="max-width: 100%; height: auto; border-radius: 10px;">
+            </div>
+
+            <!-- Right Side: Form -->
+            <div class="col-md-7">
+                <form action="{{ url_for('predict') }}" method="POST">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="clump_thickness">Clump Thickness</label>
+                            <input type="number" name="Clump Thickness" class="form-control mb-2" required min="1" max="10">
+    
+                            <label for="uniform_cell_size">Uniform Cell Size</label>
+                            <input type="number" name="Uniform Cell Size" class="form-control mb-2" required min="1" max="10">
+    
+                            <label for="uniform_cell_shape">Uniform Cell Shape</label>
+                            <input type="number" name="Uniform Cell Shape" class="form-control mb-2" required min="1" max="10">
+    
+                            <label for="marginal_adhesion">Marginal Adhesion</label>
+                            <input type="number" name="Marginal Adhesion" class="form-control mb-2" required min="1" max="10">
+    
+                            <label for="single_epithelial_size">Single Epithelial Cell Size</label>
+                            <input type="number" name="Single Epithelial Cell Size" class="form-control mb-2" required min="1" max="10">
+                        </div>
+    
+                        <div class="col-md-6">
+                            <label for="bare_nuclei">Bare Nuclei</label>
+                            <input type="number" name="Bare Nuclei" class="form-control mb-2" required min="1" max="10">
+    
+                            <label for="bland_chromatin">Bland Chromatin</label>
+                            <input type="number" name="Bland Chromatin" class="form-control mb-2" required min="1" max="10">
+    
+                            <label for="normal_nucleoli">Normal Nucleoli</label>
+                            <input type="number" name="Normal Nucleoli" class="form-control mb-2" required min="1" max="10">
+    
+                            <label for="mitoses">Mitoses</label>
+                            <input type="number" name="Mitoses" class="form-control mb-2" required min="1" max="10">
+    
+                            <button type="submit" class="btn btn-primary mt-3">Predict Cancer</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    // Function to toggle between home page and input page
+    function showInputPage() {
+        document.getElementById("homePage").classList.add("hidden");
+        document.getElementById("inputPage").classList.remove("hidden");
+    }
+
+    // JavaScript validation
+    document.getElementById("cancerForm").addEventListener("submit", function(event) {
+        let inputs = document.querySelectorAll("input");
+        let isValid = true;
+
+        inputs.forEach(input => {
+            let value = input.value.trim();
+            let min = parseInt(input.getAttribute("min"));
+            let max = parseInt(input.getAttribute("max"));
+
+            if (isNaN(value) || value === "") {
+                alert(input.name + " must be a valid number.");
+                isValid = false;
+            } else if (value < min || value > max) {
+                alert(input.name + " must be between " + min + " and " + max + ".");
+                isValid = false;
+            }
+        });
+
+        if (!isValid) {
+            event.preventDefault(); // Prevent form submission
+        }
+    });
+</script>
+</html>
